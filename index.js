@@ -1,7 +1,20 @@
 import express from 'express';
-const app = express();
+import { createClient } from '@supabase/supabase-js';
 
+import dotenv from 'dotenv';
+
+dotenv.config();
+
+
+const app = express();
 const port = 3000;
+
+
+
+// Initialize Supabase client
+const supabaseUrl = process.env.SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 
 app.use(express.json());
@@ -12,7 +25,7 @@ let nextId = 1;
 
 // on separate postman tab do the post request
 // POST / ADD AN ITEM 
-app.post('/shopping-list', (req, res) => { 
+app.post('/shopping-list/item', (req, res) => { 
     // req.body.name
 
     // destructuring from req.body object 
@@ -35,14 +48,14 @@ app.post('/shopping-list', (req, res) => {
 
 // on separate postman tab do get request
 // get all the items in the shopping list
-app.get('/shopping-list', (req, res) => {
+app.get('/shopping-list/items', (req, res) => {
     res.status(200).send(shoppingData);
    
 })
 
 
 // get one item with an id
-app.get('/shopping-list/:id', (req, res) => {
+app.get('/shopping-list/items/:id', (req, res) => {
 
     const id = Number(req.params.id);
     // .find - first element in the array
@@ -58,7 +71,7 @@ app.get('/shopping-list/:id', (req, res) => {
 
 // UPDATE an item
 
-app.put('/shopping-list/:id', (req, res) => {
+app.put('/shopping-list/items/:id', (req, res) => {
     const id = Number(req.params.id);
     const index = shoppingData.findIndex(item => item.id === id);
 
@@ -76,7 +89,7 @@ app.put('/shopping-list/:id', (req, res) => {
 
 // DELETE
 
-app.delete('/shopping-list/:id', (req, res) => {
+app.delete('/shopping-list/items/:id', (req, res) => {
     const id = Number(req.params.id);
     const index = shoppingData.findIndex(item => item.id === id);
     
